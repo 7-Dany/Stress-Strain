@@ -14,7 +14,7 @@ class GraphPlotter:
         self.stress_data = []
         self.strain_data = []
         
-        self.current_plot = tk.IntVar(value=0)  # 0 for force-displacement, 1 for stress-strain
+        self.current_plot = tk.IntVar(value=0)  # 0 for stress-strain, 1 for force-displacement,
 
     def plot_graph(self, graph_area, force_data, displacement_data, stress_data, strain_data):
         self.graph_area = graph_area
@@ -32,16 +32,16 @@ class GraphPlotter:
         if self.canvas:
             self.canvas.get_tk_widget().destroy()
         
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(10,6))
         
         if plot_type == 1:  # Force vs Displacement
-            ax.plot(self.displacement_data, self.force_data, 'bo-')
+            ax.plot(self.displacement_data, self.force_data, 'b')
             ax.set_xlabel('Displacement (mm)')
             ax.set_ylabel('Force (N)')
             ax.set_title('Force vs Displacement')
         else:  # Stress vs Strain
-            ax.plot(self.strain_data, self.stress_data, 'ro-')
-            ax.set_xlabel('Strain (mm)')
+            ax.plot(self.strain_data, self.stress_data, 'r')
+            ax.set_xlabel('Strain')
             ax.set_ylabel('Stress (MPa)')
             ax.set_title('Stress vs Strain')
 

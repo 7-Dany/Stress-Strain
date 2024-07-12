@@ -11,7 +11,7 @@ class InputFrame(tk.Frame):
 
     def create_widgets(self):
         self.shape_label = tk.Label(self, text="Select the shape of the specimen:")
-        self.shape_label.grid(row=0, column=0, pady=5)
+        self.shape_label.grid(row=0, column=0, pady=5, sticky="w")
         
         self.shape_option = tk.OptionMenu(self, self.shape_var, "rounded", "rectangular", command=self.update_geometry_inputs)
         self.shape_option.grid(row=0, column=1, pady=5)
@@ -26,13 +26,13 @@ class InputFrame(tk.Frame):
         self.height_entry = tk.Entry(self)
 
         self.initial_length_label = tk.Label(self, text="Enter the initial length of the specimen:")
-        self.initial_length_label.grid(row=3, column=0, pady=5)
+        self.initial_length_label.grid(row=3, column=0, pady=5, sticky="w")
         
         self.initial_length_entry = tk.Entry(self)
         self.initial_length_entry.grid(row=3, column=1, pady=5)
 
-        self.submit_button = tk.Button(self, text="Submit", command=self.submit_specimen_details)
-        self.submit_button.grid(row=4, column=0, columnspan=2, pady=10)
+        self.submit_button = tk.Button(self, text="Submit", command=self.submit_specimen_details, width=20)
+        self.submit_button.grid(row=4, column=0, columnspan=2, padx=5,pady=15)
 
     def update_geometry_inputs(self, *args):
         shape = self.shape_var.get()
@@ -41,14 +41,14 @@ class InputFrame(tk.Frame):
             self.width_entry.grid_remove()
             self.height_label.grid_remove()
             self.height_entry.grid_remove()
-            self.diameter_label.grid(row=1, column=0, pady=5)
+            self.diameter_label.grid(row=1, column=0, pady=5, sticky="w")
             self.diameter_entry.grid(row=1, column=1, pady=5)
         else:
             self.diameter_label.grid_remove()
             self.diameter_entry.grid_remove()
-            self.width_label.grid(row=1, column=0, pady=5)
+            self.width_label.grid(row=1, column=0, pady=5, sticky="w")
             self.width_entry.grid(row=1, column=1, pady=5)
-            self.height_label.grid(row=2, column=0, pady=5)
+            self.height_label.grid(row=2, column=0, pady=5, sticky="w")
             self.height_entry.grid(row=2, column=1, pady=5)
 
     def submit_specimen_details(self):

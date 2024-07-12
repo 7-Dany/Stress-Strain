@@ -1,4 +1,5 @@
 import tkinter as tk
+from TestingSimulator import MaterialTestingSimulator
 from DataCollector import DataCollector
 from MainFrame import MainFrame
 from InputFrame import InputFrame
@@ -10,6 +11,7 @@ class App:
         self.root.title("Data Collection and Graphing")
         
         self.data_collector = DataCollector(serial_place)
+        self.testing_simulator = MaterialTestingSimulator(self.root)
         
         self.show_input_frame()
 
@@ -38,7 +40,7 @@ class App:
         self.show_main_frame(data)
 
     def show_main_frame(self, data):
-        self.main_frame = MainFrame(self.root, data, self.data_collector)
+        self.main_frame = MainFrame(self.root, data, self.data_collector, self.testing_simulator)
         self.main_frame.grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
 
 

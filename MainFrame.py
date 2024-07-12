@@ -2,10 +2,11 @@ import tkinter as tk
 from GraphPlotter import GraphPlotter
 
 class MainFrame(tk.Frame):
-    def __init__(self, parent, data, data_collector):
+    def __init__(self, parent, data, data_collector, testing_simulator):
         super().__init__(parent)
         
         self.data_collector = data_collector
+        self.testing_simulator = testing_simulator
         self.graph_plotter = GraphPlotter(parent)
         
         self.inital_data = data
@@ -88,7 +89,10 @@ class MainFrame(tk.Frame):
         self.stop_button.grid(row=0, column=1, padx=10, pady=10)
         
         self.show_graph_button = tk.Button(self.button_area, text="Plot", command=self.show_graph, width=15)
-        self.show_graph_button.grid(row=0, column=2, padx=10, pady=10)
+        self.show_graph_button.grid(row=1, column=0, padx=10, pady=10)
+        
+        self.simulate_button = tk.Button(self.button_area, text="Simulate", command=self.start_simulation, width=15)
+        self.simulate_button.grid(row=1, column=1,padx=10, pady=10)
         
     
     def data_callback(self, force, displacement):
@@ -126,3 +130,6 @@ class MainFrame(tk.Frame):
 
     def show_graph(self):
         self.graph_plotter.plot_graph(self.graph1_area, self.force_data, self.displacement_data, self.stress_data, self.strain_data)
+        
+    def start_simulation(self):
+        self.testing_simulator.start_simulation(self.inital_data["diameter"], self.inital_data["initial_length"])
