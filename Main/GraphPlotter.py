@@ -90,7 +90,10 @@ class GraphPlotter:
         self.canvas.get_tk_widget().configure(width=600, height=400)
         self.canvas.draw()
         self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-    
+        
+        # Close the figure after it's drawn to release memory
+        plt.close(fig)
+
     def save_plot(self, fig, title):
         """
         Saves the current matplotlib figure as a PNG file.
@@ -103,7 +106,8 @@ class GraphPlotter:
                                                  filetypes=[("PNG files", "*.png"), ("All files", "*.*")])
         if file_path:
             fig.savefig(file_path)
-    
+            plt.close(fig)  # Close the figure after saving
+
     def save_results(self):
         """
         Saves multiple plots related to force-displacement and stress-strain as PNG files.
@@ -126,14 +130,12 @@ class GraphPlotter:
             ax.set_ylabel(y_label)
             ax.set_title(title)
             self.save_plot(fig, f"Save {title} plot as")
-            plt.close(fig)
         
         # Save results plot
         fig, ax = plt.subplots(figsize=(10, 6))
         self.display_results(ax)
         self.save_plot(fig, "Save Results plot as")
-        plt.close(fig)
-    
+
     def get_young_modulus(self, strain, stress):
         """
         Calculates the Young's modulus from strain and stress data.
