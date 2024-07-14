@@ -17,20 +17,21 @@ class App:
         main_frame (MainFrame): Instance of MainFrame for displaying simulation results.
     """
 
-    def __init__(self, root, serial_place):
+    def __init__(self, root, main_serial_place, virtual_serial_place):
         """
         Initializes the application with the root window and sets up initial components.
 
         Args:
             root (tk.Tk): The main tkinter root window.
-            serial_place (str): Serial port address for data collection.
+            main_serial_place (str): Serial port address from arduino for data collection.
+            virutal_serial_place (str): Serial port address for virtual simulator.
         """
         self.root = root
         self.root.title("Data Collection and Graphing")
         
         # Initialize data collector and testing simulator
-        self.data_collector = DataCollector(serial_place)
-        self.testing_simulator = MaterialTestingSimulator(self.root)
+        self.data_collector = DataCollector(main_serial_place)
+        self.testing_simulator = MaterialTestingSimulator(self.root, virtual_serial_place)
         
         # Show the input frame initially
         self.show_input_frame()
@@ -88,5 +89,7 @@ class App:
 if __name__ == "__main__":
     # Initialize tkinter root window and application
     root = tk.Tk()
-    app = App(root, "COM4")  # Replace "COM4" with the appropriate serial port
+    # Replace "COM4" with the appropriate serial port for the arduino, or the reciever serial port.
+    # Replace "COM2" with the virtual serial port, that will send the data.
+    app = App(root, "COM4", "COM2")  
     root.mainloop()
