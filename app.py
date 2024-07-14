@@ -1,8 +1,6 @@
 import tkinter as tk
-from TestingSimulator import MaterialTestingSimulator
-from DataCollector import DataCollector
-from MainFrame import MainFrame
-from InputFrame import InputFrame
+from Main.TestingSimulator import MaterialTestingSimulator
+from Main import DataCollector, MainFrame, InputFrame
 from math import pi
 
 class App:
@@ -13,7 +11,7 @@ class App:
         root (tk.Tk): The main tkinter root window.
         data_collector (DataCollector): Instance of DataCollector for collecting data from a serial port.
         testing_simulator (MaterialTestingSimulator): Instance of MaterialTestingSimulator for simulation.
-        input_frame (InputFrame): Instance of InputFrame for gathering input parameters.
+        input_frame (InputFrame): Instance of InputFrame for gathering speciemen parameters.
         main_frame (MainFrame): Instance of MainFrame for displaying simulation results.
     """
 
