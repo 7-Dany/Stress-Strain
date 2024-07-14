@@ -211,6 +211,7 @@ class MainFrame(tk.Frame):
         """
         self.data_collector.stop_collecting()
 
+
     def start_new_test(self):
         """
         Start a new test with fresh initial data.
@@ -223,17 +224,20 @@ class MainFrame(tk.Frame):
         self.destroy()  # Destroy current frame
         self.show_input_frame()  # Show input frame
         
+        
     def show_graph(self):
         """
         Plot the current data on the graph.
         """
-        self.graph_plotter.plot_graph(self.graph1_area, self.force_data, self.displacement_data, self.stress_data, self.strain_data)
+        self.graph_plotter.plot_graph(self.graph1_area, self.force_data, self.displacement_data, self.stress_data, self.strain_data, self.initial_data)
+        
         
     def start_simulation(self):
         """
         Start simulation with the current initial data.
         """
         self.testing_simulator.start_simulation(self.initial_data["area"], self.initial_data["initial_length"])
+
 
     def save_results(self):
         """

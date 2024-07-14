@@ -33,10 +33,11 @@ class GraphPlotter:
         self.displacement_data = []
         self.stress_data = []
         self.strain_data = []
+        self.initial_data = {}
         self.current_plot = tk.IntVar(value=0)  # 0 for stress-strain, 1 for force-displacement, 2 for results
         self.current_plot.trace_add('write', self.update_plot)
 
-    def plot_graph(self, graph_area, force_data, displacement_data, stress_data, strain_data):
+    def plot_graph(self, graph_area, force_data, displacement_data, stress_data, strain_data, initial_data):
         """
         Plots a graph based on provided data.
 
@@ -52,6 +53,7 @@ class GraphPlotter:
         self.displacement_data = displacement_data
         self.stress_data = stress_data
         self.strain_data = strain_data
+        self.initial_data = initial_data
         self.update_plot()
 
     def update_plot(self, *args):
@@ -197,11 +199,13 @@ class GraphPlotter:
         return {
             "Yield Stress (MPa)": yield_stress,
             "Yield Strain": yield_strain,
+            "Force at Yield (N)": yield_stress * self.initial_data["area"],
             "Ultimate Tensile Strength (MPa)": ultimate_stress,
             "Strain at UTS": strain_at_uts,
+            "Force at UTS (N)": ultimate_stress * self.initial_data["area"],
             "Fracture Stress (MPa)": fracture_stress,
             "Fracture Strain": fracture_strain,
-            "Young's Modulus (MPa)": youngs_modulus
+            "Young's Modulus (MPa)": youngs_modulus,
         }
 
     def display_results(self, ax):
@@ -212,7 +216,9 @@ class GraphPlotter:
             ax (matplotlib.axes.Axes): Axes object to display the results.
         """
         results = self.calculate_properties(self.strain_data, self.stress_data)
-        text_str = "\n".join([f"{key}: {value:.4f}" for key, value in results.items()])
+        text_str = "\n".join([f"Specimen {key}: {value}" for key, value in self.initial_data.items()])
+        text_str += "\n"
+        text_str += "\n".join([f"{key}: {value:.4f}" for key, value in results.items()])
         ax.text(0.05, 0.95, text_str, transform=ax.transAxes, fontsize=16, verticalalignment='top', horizontalalignment='left')
         ax.axis('off')
         ax.grid(False)
