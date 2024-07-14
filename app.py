@@ -24,7 +24,7 @@ class App:
             data = {
                 "shape": shape,
                 "diameter": diameter,
-                "area": ((pi / 4) * (diameter ** 2)) * (10 ** -6),
+                "area": (pi / 4) * (diameter ** 2),
                 "initial_length": initial_length
             }
         else:
@@ -32,7 +32,7 @@ class App:
                 "shape": shape,
                 "width": width,
                 "height": height,
-                "area": (width * height) * (10 ** -6),
+                "area": (width * height),
                 "initial_length": initial_length
             }
 
@@ -40,12 +40,10 @@ class App:
         self.show_main_frame(data)
 
     def show_main_frame(self, data):
-        self.main_frame = MainFrame(self.root, data, self.data_collector, self.testing_simulator)
+        self.main_frame = MainFrame(self.root, data, self.data_collector, self.testing_simulator, self.show_input_frame)
         self.main_frame.grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
-
 
 if __name__ == "__main__":
     root = tk.Tk()
     app = App(root, "COM4")
     root.mainloop()
-    

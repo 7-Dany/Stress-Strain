@@ -2,14 +2,15 @@ import tkinter as tk
 from GraphPlotter import GraphPlotter
 
 class MainFrame(tk.Frame):
-    def __init__(self, parent, data, data_collector, testing_simulator):
+    def __init__(self, parent, data, data_collector, testing_simulator, show_input_frame):
         super().__init__(parent)
         
         self.data_collector = data_collector
         self.testing_simulator = testing_simulator
+        self.show_input_frame = show_input_frame
         self.graph_plotter = GraphPlotter(parent)
         
-        self.inital_data = data
+        self.initial_data = data
         self.force_data = []
         self.displacement_data = []
         self.stress_data = []
@@ -49,13 +50,13 @@ class MainFrame(tk.Frame):
 
     def show_next_graph(self):
         current = self.graph_plotter.current_plot.get()
-        if current < 1:
+        if current < 2:
             self.graph_plotter.current_plot.set(current + 1)
             self.graph_plotter.update_plot()
             self.update_graph_label()
 
     def update_graph_label(self):
-        graph_labels = ["Stress vs Strain", "Force vs Displacement"]
+        graph_labels = ["Stress vs Strain", "Force vs Displacement", "Results"]
         self.graph_type.set(graph_labels[self.graph_plotter.current_plot.get()])
 
     def create_force_displacement_area(self):
@@ -83,23 +84,29 @@ class MainFrame(tk.Frame):
         self.button_area.grid(row=2, column=0, padx=10, pady=10)
         
         self.start_button = tk.Button(self.button_area, text="Start", command=self.start_data_collection, width=15)
-        self.start_button.grid(row=0, column=0, padx=10, pady=10)
+        self.start_button.grid(row=0, column=0, padx=10, pady=10, sticky="w")
         
         self.stop_button = tk.Button(self.button_area, text="Stop", command=self.stop_data_collection, width=15)
         self.stop_button.grid(row=0, column=1, padx=10, pady=10)
         
+        self.new_test_button = tk.Button(self.button_area, text="New", command=self.start_new_test, width=15)
+        self.new_test_button.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+        
         self.show_graph_button = tk.Button(self.button_area, text="Plot", command=self.show_graph, width=15)
-        self.show_graph_button.grid(row=1, column=0, padx=10, pady=10)
+        self.show_graph_button.grid(row=1, column=0, padx=10, pady=10, sticky="w")
         
         self.simulate_button = tk.Button(self.button_area, text="Simulate", command=self.start_simulation, width=15)
         self.simulate_button.grid(row=1, column=1,padx=10, pady=10)
         
+        self.save_results_button = tk.Button(self.button_area, text="Save", width=15)
+        self.save_results_button.grid(row=1, column=2, padx=10, pady=10, sticky="e")
+        
     
     def data_callback(self, force, displacement):
-        area = self.inital_data["area"]
-        initial_length = self.inital_data["initial_length"]
+        area = self.initial_data["area"]
+        initial_length = self.initial_data["initial_length"]
         
-        stress = (force / area) / 1e6
+        stress = force / area
         
         if len(self.displacement_data) > 0:
             strain = (displacement - self.displacement_data[0]) / initial_length
@@ -112,11 +119,12 @@ class MainFrame(tk.Frame):
         self.stress_data.append(stress)
         self.strain_data.append(strain)
         
-        self.f_d_text.insert("1.0", f"{force:.2f}\t {displacement:.2f}\n")
-        self.stress_text.insert("1.0", f"{stress:.2f}\t{strain:.2f}\n")
+        self.f_d_text.insert("1.0", f"{force:.2f}\t {displacement:.3f}\n")
+        self.stress_text.insert("1.0", f"{stress:.2f}\t{strain:.5f}\n")
         
         
     def start_data_collection(self):
+        self.create_widgets()
         self.force_data = []
         self.displacement_data = []
         self.stress_data = []
@@ -128,8 +136,18 @@ class MainFrame(tk.Frame):
         self.data_collector.stop_collecting()
 
 
+    def start_new_test(self):
+        self.initial_data = {}
+        self.force_data = []
+        self.displacement_data = []
+        self.stress_data = []
+        self.strain_data = []
+        self.destroy()
+        self.show_input_frame()
+        
+        
     def show_graph(self):
         self.graph_plotter.plot_graph(self.graph1_area, self.force_data, self.displacement_data, self.stress_data, self.strain_data)
         
     def start_simulation(self):
-        self.testing_simulator.start_simulation(self.inital_data["diameter"], self.inital_data["initial_length"])
+        self.testing_simulator.start_simulation(self.initial_data["area"], self.initial_data["initial_length"])
