@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import filedialog
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
@@ -16,7 +17,6 @@ class GraphPlotter:
         self.strain_data = []
         
         self.current_plot = tk.IntVar(value=0)  # 0 for stress-strain, 1 for force-displacement, 2 for results
-
         self.current_plot.trace_add('write', self.update_plot)
 
     def plot_graph(self, graph_area, force_data, displacement_data, stress_data, strain_data):
@@ -34,6 +34,7 @@ class GraphPlotter:
         # Clear previous plot if canvas exists
         if self.canvas:
             self.canvas.get_tk_widget().destroy()
+            self.canvas = None
         
         fig, ax = plt.subplots(figsize=(10, 6))
         
@@ -58,7 +59,39 @@ class GraphPlotter:
         self.canvas.get_tk_widget().configure(width=600, height=400)
         self.canvas.draw()
         self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+    
+    def save_plot(self, fig, title):
+        file_path = filedialog.asksaveasfilename(defaultextension=".png", title=title,
+                                                 filetypes=[("PNG files", "*.png"), ("All files", "*.*")])
+        if file_path:
+            fig.savefig(file_path)
+    
+    def save_results(self):
+        plots = [
+            (self.displacement_data, self.force_data, 'Force vs Displacement', 'Displacement (mm)', 'Force (N)'),
+            (self.strain_data, self.stress_data, 'Stress vs Strain', 'Strain', 'Stress (MPa)')
+        ]
         
+        for i, (x_data, y_data, title, x_label, y_label) in enumerate(plots):
+            fig, ax = plt.subplots(figsize=(10, 6))
+            
+            if title == "Stress vs Strain":
+                color = 'r'
+            else:
+                color = 'b'
+                
+            ax.plot(x_data, y_data, color)
+            ax.set_xlabel(x_label)
+            ax.set_ylabel(y_label)
+            ax.set_title(title)
+            self.save_plot(fig, f"Save {title} plot as")
+            plt.close(fig)
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        self.display_results(ax)
+        self.save_plot(fig, "Save Results plot as")
+        plt.close(fig)
+    
     def get_young_modulus(self, strain, stress):
         first = 0
         second = 0
@@ -84,7 +117,7 @@ class GraphPlotter:
         yield_idx = np.argmin(np.abs(stress - offset_stress))
         
         # Refine yield point
-        for i in range(yield_idx - 100, yield_idx + 100):
+        for i in range(max(0, yield_idx - 100), min(len(stress), yield_idx + 100)):
             if stress[i] >= offset_stress[i]:
                 yield_idx = i
                 break

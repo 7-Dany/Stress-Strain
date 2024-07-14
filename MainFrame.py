@@ -98,7 +98,7 @@ class MainFrame(tk.Frame):
         self.simulate_button = tk.Button(self.button_area, text="Simulate", command=self.start_simulation, width=15)
         self.simulate_button.grid(row=1, column=1,padx=10, pady=10)
         
-        self.save_results_button = tk.Button(self.button_area, text="Save", width=15)
+        self.save_results_button = tk.Button(self.button_area, text="Save", command=self.save_results,width=15)
         self.save_results_button.grid(row=1, column=2, padx=10, pady=10, sticky="e")
         
     
@@ -151,3 +151,6 @@ class MainFrame(tk.Frame):
         
     def start_simulation(self):
         self.testing_simulator.start_simulation(self.initial_data["area"], self.initial_data["initial_length"])
+
+    def save_results(self):
+        self.graph_plotter.save_results()
