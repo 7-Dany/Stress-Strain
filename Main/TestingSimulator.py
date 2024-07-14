@@ -2,7 +2,7 @@ import time
 import serial
 import numpy as np
 import threading
-from TestingInput import MaterialInputDialog
+from .TestingInput import MaterialInputDialog
 
 class MaterialTestingSimulator:
     """

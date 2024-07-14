@@ -1,5 +1,5 @@
 import tkinter as tk
-from GraphPlotter import GraphPlotter
+from .GraphPlotter import GraphPlotter
 
 class MainFrame(tk.Frame):
     """

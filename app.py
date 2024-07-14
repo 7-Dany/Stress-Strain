@@ -1,6 +1,8 @@
 import tkinter as tk
 from Main.TestingSimulator import MaterialTestingSimulator
-from Main import DataCollector, MainFrame, InputFrame
+from Main.DataCollector import DataCollector
+from Main.MainFrame import MainFrame
+from Main.InputFrame import InputFrame
 from math import pi
 
 class App:
